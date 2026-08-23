@@ -14,22 +14,32 @@
  * to prevent skips on backgrounded tab return, and the clock is gated on an
  * IntersectionObserver.
  */
+// ONE fixed image set for the whole carousel. The panels never swap photos —
+// the active panel simply widens, so the wide one shows the full frame while
+// the narrow ones show a cropped slice of the same picture. The active panel
+// therefore tracks the slide index: slide 0 widens panel 0, and so on.
+const IMAGES = ['/img/team-1.svg', '/img/team-2.svg', '/img/team-3.svg']
+
 const slides = [
-  {
-    eyebrow: 'text-sky',
-    heading: 'Manage team increase productivity',
-    body: 'We use as filler text for layouts, non-readability is of great importance but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful nor again is there anyone.',
-    points: ['99% Survey Report', 'Trusted by teams', 'Self-Service'],
-    images: ['/img/team-1.svg', '/img/team-2.svg', '/img/team-3.svg'],
-    active: 1,
-  },
   {
     eyebrow: 'text-brand',
     heading: 'Discover business Opportunities',
     body: 'We use as filler text for layouts, non-readability is of great importance but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful nor again is there anyone.',
     points: ['Profile Consultation', 'Asset management', 'No-risk business idea'],
-    images: ['/img/team-4.svg', '/img/team-5.svg', '/img/team-6.svg'],
-    active: 0,
+  },
+  {
+    eyebrow: 'text-sky',
+    heading: 'Manage team increase productivity',
+    body: 'We use as filler text for layouts, non-readability is of great importance but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful nor again is there anyone.',
+    points: ['99% Survey Report', 'Trusted by teams', 'Self-Service'],
+  },
+  {
+    // TODO(onetro): third slide. Heading, eyebrow colour and the three bullet
+    // points still to be read off the original — placeholder copy for now.
+    eyebrow: 'text-brand',
+    heading: 'Build lasting client relationships',
+    body: 'We use as filler text for layouts, non-readability is of great importance but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful nor again is there anyone.',
+    points: ['Dedicated advisor', 'Quarterly reviews', 'Transparent fees'],
   },
 ]
 
@@ -146,15 +156,15 @@ onUnmounted(() => {
       >
         <div class="flex h-[300px] gap-3 sm:h-[420px] sm:gap-4 lg:h-[520px]">
           <div
-            v-for="(src, i) in current.images" :key="src"
+            v-for="(src, i) in IMAGES" :key="src"
             class="relative min-w-0 overflow-hidden rounded-3xl transition-[flex-grow] duration-700 ease-[cubic-bezier(.22,.61,.36,1)]"
-            :style="{ flexGrow: i === current.active ? 3 : 1, flexBasis: 0 }"
+            :style="{ flexGrow: i === index ? 3 : 1, flexBasis: 0 }"
           >
             <img :src="src" alt="" width="820" height="900" loading="lazy" class="h-full w-full object-cover" />
 
             <!-- timer pill: only on the active panel, restarts each slide -->
             <div
-              v-if="i === current.active"
+              v-if="i === index"
               class="absolute inset-x-6 bottom-7 h-[5px] overflow-hidden rounded-full bg-white/35"
             >
               <div

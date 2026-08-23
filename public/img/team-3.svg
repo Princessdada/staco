@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="900" viewBox="0 0 820 900" role="img" aria-label="Team 3">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#b9c6cc"/><stop offset="1" stop-color="#7e8f98"/></linearGradient></defs>
+<rect width="820" height="900" fill="url(#g)"/>
+<text x="50%" y="50%" fill="#ffffff" fill-opacity=".55" font-family="system-ui,sans-serif" font-size="37" text-anchor="middle" dominant-baseline="middle">Team 3</text>
+</svg>
