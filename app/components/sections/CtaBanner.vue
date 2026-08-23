@@ -2,18 +2,11 @@
 /**
  * "We are building financial foundations" band.
  *
- * The arrow graphic is scroll-linked in three phases, matching the original:
+ * Each arrow unit (colored head, colored stem, and white tail-stripe) is a
+ * single fused SVG group that rises together as one continuous shape.
  *
- *   phase 0  band enters the viewport, even fully visible low on screen:
- *            nothing is drawn at all
- *   phase 1  further scrolling raises the ARROWS one by one, shortest first,
- *            each sliding up from below the clipped bottom edge; they finish
- *            while the band sits around mid-screen, with no stripes yet
- *   phase 2  the last stretch to the top raises all five WHITE STRIPES
- *            TOGETHER as a single group, completing the design as the band
- *            reaches the top of the screen
- *
- * Scroll position is the timeline: scrolling back down reverses everything.
+ * Window opens when the band's top crosses ~55% of the viewport and completes
+ * as the band reaches the top.
  */
 const bannerEl = ref(null)
 const progress = ref(0)
@@ -25,10 +18,9 @@ function measure() {
   if (!el) return
   const r = el.getBoundingClientRect()
   const vh = window.innerHeight
-  // window opens only once the band has climbed to the upper half of the
-  // screen, and closes as it reaches the top
-  const startTop = vh * 0.5
-  const endTop = vh * 0.12
+  // Window opens when top crosses ~55% of viewport and finishes when band reaches top (0)
+  const startTop = vh * 0.55
+  const endTop = 0
   const p = (startTop - r.top) / (startTop - endTop)
   progress.value = Math.min(1, Math.max(0, p))
 }
@@ -52,18 +44,13 @@ const COLORS = ['#2f6d55', '#3d8163', '#4e9a74', '#63b489', '#7fd3a3']
 const slice = (from, span) =>
   Math.min(1, Math.max(0, (progress.value - from) / span))
 
-// phase 1: arrow i rises in its own slice, shortest (leftmost) first;
-// hidden depth is the arrow full height so the head tip peeks first
-function arrowStyle(i) {
-  const p = slice(i * 0.07, 0.35)
-  return { transform: `translateY(${Math.round((1 - p) * (120 + 26 * i))}px)` }
+// Each arrow unit (head + stem + white stripe) rises from below the bottom clip
+function arrowUnitStyle(i) {
+  const p = slice(i * 0.08, 0.65)
+  // Distance needed to hide entire unit below y=340
+  const totalHeight = 220 + 26 * i
+  return { transform: `translateY(${Math.round((1 - p) * totalHeight)}px)` }
 }
-
-// phase 2: the five stripes rise TOGETHER, one group, after the arrows
-const stripesStyle = computed(() => {
-  const p = slice(0.65, 0.3)
-  return { transform: `translateY(${Math.round((1 - p) * 118)}px)` }
-})
 </script>
 
 <template>
@@ -92,21 +79,24 @@ const stripesStyle = computed(() => {
           class="pointer-events-none absolute bottom-0 right-8 hidden h-[92%] w-[48%] lg:block"
           viewBox="0 0 480 340" fill="none" aria-hidden="true" preserveAspectRatio="xMaxYMax meet"
         >
-          <!-- stripes: one group, they arrive together in the final stretch.
-               Each stripe top is fused to the foot of its own arrow stem. -->
-          <g class="will-change-transform" :style="stripesStyle">
+          <!-- Fused arrow units: head, stem and white tail-stripe rise together per arrow -->
+          <g
+            v-for="(c, i) in COLORS"
+            :key="i"
+            class="will-change-transform"
+            :style="arrowUnitStyle(i)"
+          >
+            <!-- White stripe joined to the foot of the arrow stem -->
             <path
-              v-for="(c, i) in COLORS" :key="'s' + i"
               :d="`M${216 + i * 52} 231 h24 L${140 + i * 52} 340 h-34 Z`"
               fill="#ffffff"
             />
-          </g>
-          <!-- arrows: staggered, shortest first, blocky heads over thick stems -->
-          <g v-for="(c, i) in COLORS" :key="i" class="will-change-transform" :style="arrowStyle(i)">
+            <!-- Arrow head -->
             <path
               :d="`M${202 + i * 52} ${162 - i * 26} L${228 + i * 52} ${120 - i * 26} L${254 + i * 52} ${162 - i * 26} Z`"
               :fill="c"
             />
+            <!-- Arrow stem -->
             <rect :x="216 + i * 52" :y="158 - i * 26" width="24" :height="74 + i * 26" :fill="c" />
           </g>
         </svg>
@@ -114,3 +104,6 @@ const stripesStyle = computed(() => {
     </div>
   </section>
 </template>
+
+<style scoped>
+</style>
