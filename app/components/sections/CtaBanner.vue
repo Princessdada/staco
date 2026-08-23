@@ -2,18 +2,16 @@
 /**
  * "We are building financial foundations" band.
  *
- * The arrow graphic is scroll-linked in three phases, matching the original:
+ * The graphic is a perspective road: five arrows standing on a horizon, each
+ * stem continuing toward the viewer as a white lane. Lane edges are rays from
+ * a single vanishing point, so the lanes narrow at the horizon and fan out
+ * toward the bottom left. Geometry measured off the original.
  *
- *   phase 0  band enters the viewport, even fully visible low on screen:
- *            nothing is drawn at all
- *   phase 1  further scrolling raises the ARROWS one by one, shortest first,
- *            each sliding up from below the clipped bottom edge; they finish
- *            while the band sits around mid-screen, with no stripes yet
- *   phase 2  the last stretch to the top raises all five WHITE STRIPES
- *            TOGETHER as a single group, completing the design as the band
- *            reaches the top of the screen
- *
- * Scroll position is the timeline: scrolling back down reverses everything.
+ * Animation: the WHOLE graphic is one group sliding up behind the band's
+ * clipped bottom edge. Everything moves together at one rate; the arrow tips
+ * appear first only because they sit highest in the artwork, and the road
+ * arrives last because it sits lowest. Scroll position is the timeline, so
+ * scrolling back down puts it away again.
  */
 const bannerEl = ref(null)
 const progress = ref(0)
@@ -25,12 +23,11 @@ function measure() {
   if (!el) return
   const r = el.getBoundingClientRect()
   const vh = window.innerHeight
-  // window opens only once the band has climbed to the upper half of the
-  // screen, and closes as it reaches the top
-  const startTop = vh * 0.5
-  const endTop = vh * 0.12
-  const p = (startTop - r.top) / (startTop - endTop)
-  progress.value = Math.min(1, Math.max(0, p))
+  // Nothing while the band sits low on screen. The window opens only once its
+  // top has climbed to 45% of the viewport and closes as it nears the top.
+  const startTop = vh * 0.45
+  const endTop = vh * 0.05
+  progress.value = Math.min(1, Math.max(0, (startTop - r.top) / (startTop - endTop)))
 }
 function onScroll() {
   if (!raf) raf = requestAnimationFrame(measure)
@@ -47,23 +44,39 @@ onUnmounted(() => {
   window.removeEventListener('resize', onScroll)
 })
 
-const COLORS = ['#2f6d55', '#3d8163', '#4e9a74', '#63b489', '#7fd3a3']
+const HORIZON = 325
+const BOTTOM = 500
+const STEM = 27
+const HEAD_W = 72
+const HEAD_H = 45
+const VX = 225
+const K = 1.62
 
-const slice = (from, span) =>
-  Math.min(1, Math.max(0, (progress.value - from) / span))
+const ARROWS = [
+  { cx: 122, top: 230, fill: '#2f6d55' },
+  { cx: 179, top: 185, fill: '#3d8163' },
+  { cx: 236, top: 142, fill: '#4e9a74' },
+  { cx: 293, top: 100, fill: '#63b489' },
+  { cx: 350, top: 52, fill: '#7fd3a3' },
+]
 
-// phase 1: arrow i rises in its own slice, shortest (leftmost) first;
-// hidden depth is the arrow full height so the head tip peeks first
-function arrowStyle(i) {
-  const p = slice(i * 0.07, 0.35)
-  return { transform: `translateY(${Math.round((1 - p) * (120 + 26 * i))}px)` }
+// lane = the stem projected toward the viewer along rays from the vanishing point
+function lane(cx) {
+  const l = cx - STEM / 2
+  const r = cx + STEM / 2
+  const bl = VX + (l - VX) * K
+  const br = VX + (r - VX) * K
+  return `M${l} ${HORIZON} H${r} L${br} ${BOTTOM} H${bl} Z`
 }
 
-// phase 2: the five stripes rise TOGETHER, one group, after the arrows
-const stripesStyle = computed(() => {
-  const p = slice(0.65, 0.3)
-  return { transform: `translateY(${Math.round((1 - p) * 118)}px)` }
-})
+function head(a) {
+  return `M${a.cx - HEAD_W / 2} ${a.top + HEAD_H} L${a.cx} ${a.top} L${a.cx + HEAD_W / 2} ${a.top + HEAD_H} Z`
+}
+
+// one offset for the whole group — everything rises together
+const groupTransform = computed(
+  () => `translate(0 ${Math.round((1 - progress.value) * 510)})`,
+)
 </script>
 
 <template>
@@ -88,26 +101,22 @@ const stripesStyle = computed(() => {
           </svg>
         </a>
 
+        <!-- Measured off the original: the graphic occupies ~25% of the band
+             width, sitting at 62-87% across, with a clear margin on the right. -->
         <svg
-          class="pointer-events-none absolute bottom-0 right-8 hidden h-[92%] w-[48%] lg:block"
-          viewBox="0 0 480 340" fill="none" aria-hidden="true" preserveAspectRatio="xMaxYMax meet"
+          class="pointer-events-none absolute bottom-0 right-[12%] hidden h-[88%] w-[27%] lg:block"
+          viewBox="0 0 470 510" fill="none" aria-hidden="true"
+          preserveAspectRatio="xMaxYMax meet"
         >
-          <!-- stripes: one group, they arrive together in the final stretch.
-               Each stripe top is fused to the foot of its own arrow stem. -->
-          <g class="will-change-transform" :style="stripesStyle">
-            <path
-              v-for="(c, i) in COLORS" :key="'s' + i"
-              :d="`M${216 + i * 52} 231 h24 L${140 + i * 52} 340 h-34 Z`"
-              fill="#ffffff"
-            />
-          </g>
-          <!-- arrows: staggered, shortest first, blocky heads over thick stems -->
-          <g v-for="(c, i) in COLORS" :key="i" class="will-change-transform" :style="arrowStyle(i)">
-            <path
-              :d="`M${202 + i * 52} ${162 - i * 26} L${228 + i * 52} ${120 - i * 26} L${254 + i * 52} ${162 - i * 26} Z`"
-              :fill="c"
-            />
-            <rect :x="216 + i * 52" :y="158 - i * 26" width="24" :height="74 + i * 26" :fill="c" />
+          <g :transform="groupTransform">
+            <path v-for="a in ARROWS" :key="'l' + a.cx" :d="lane(a.cx)" fill="#ffffff" />
+            <g v-for="a in ARROWS" :key="a.cx">
+              <path :d="head(a)" :fill="a.fill" />
+              <rect
+                :x="a.cx - STEM / 2" :y="a.top + HEAD_H"
+                :width="STEM" :height="HORIZON - a.top - HEAD_H" :fill="a.fill"
+              />
+            </g>
           </g>
         </svg>
       </div>
@@ -116,7 +125,6 @@ const stripesStyle = computed(() => {
 </template>
 
 <style scoped>
-/* Intentionally empty. An earlier revision had a scoped style block here;
-   keeping a valid (empty) one means any stale HMR request for this SFC
-   style module resolves to real CSS instead of erroring. */
+/* Intentionally empty: keeps a valid style module for this SFC so a stale
+   HMR request for it can never resolve to the script block. */
 </style>
