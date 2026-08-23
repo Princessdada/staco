@@ -9,11 +9,10 @@
  *
  * The only visible control is the white timer pill inside the active image:
  * a translucent track with a solid fill that runs the length of the slide.
- * There are no dots and no coloured progress bar — the original has neither.
  *
- * Auto-advances, pauses on hover and on keyboard focus (the pause mechanism
- * WCAG requires for auto-updating content), and does not auto-advance at all
- * under prefers-reduced-motion.
+ * Hover-pause is on the image group (not the whole section), delta is clamped
+ * to prevent skips on backgrounded tab return, and the clock is gated on an
+ * IntersectionObserver.
  */
 const slides = [
   {
@@ -34,19 +33,41 @@ const slides = [
   },
 ]
 
-const DWELL = 6000
+const DWELL = 5000
 
+const sectionEl = ref(null)
 const index = ref(0)
 const current = computed(() => slides[index.value])
 
+const progress = ref(0)
 const paused = ref(false)
+const isVisible = ref(false)
 const reducedMotion = ref(false)
-let mq = null
 
-function onAnimationEnd(e) {
-  if (e.animationName === 'timer' && !reducedMotion.value) {
-    index.value = (index.value + 1) % slides.length
+let lastTime = 0
+let elapsed = 0
+let rafId = null
+let mq = null
+let observer = null
+
+function loop(currentTime) {
+  if (!lastTime) lastTime = currentTime
+  // Clamp delta to at most 100ms so backgrounded tabs don't skip slides upon return
+  const delta = Math.min(currentTime - lastTime, 100)
+  lastTime = currentTime
+
+  if (isVisible.value && !paused.value && !reducedMotion.value) {
+    elapsed += delta
+    if (elapsed >= DWELL) {
+      elapsed = 0
+      progress.value = 0
+      index.value = (index.value + 1) % slides.length
+    } else {
+      progress.value = elapsed / DWELL
+    }
   }
+
+  rafId = requestAnimationFrame(loop)
 }
 
 function onMotionChange(e) {
@@ -57,22 +78,33 @@ onMounted(() => {
   mq = window.matchMedia('(prefers-reduced-motion: reduce)')
   reducedMotion.value = mq.matches
   mq.addEventListener('change', onMotionChange)
+
+  if (sectionEl.value) {
+    observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible.value = entry.isIntersecting
+      },
+      { threshold: 0.1 },
+    )
+    observer.observe(sectionEl.value)
+  }
+
+  rafId = requestAnimationFrame(loop)
 })
 
 onUnmounted(() => {
+  if (rafId) cancelAnimationFrame(rafId)
+  observer?.disconnect()
   mq?.removeEventListener('change', onMotionChange)
 })
 </script>
 
 <template>
   <section
+    ref="sectionEl"
     class="bg-white py-16 sm:py-24 lg:py-32"
     aria-labelledby="why-heading"
     aria-roledescription="carousel"
-    @mouseenter="paused = true"
-    @mouseleave="paused = false"
-    @focusin="paused = true"
-    @focusout="paused = false"
   >
     <div class="mx-auto grid w-full max-w-[1213px] items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 [&>*]:min-w-0">
       <div v-reveal class="overflow-hidden">
@@ -103,8 +135,15 @@ onUnmounted(() => {
         </Transition>
       </div>
 
-      <!-- accordion: the active panel widens, the others collapse -->
-      <div v-reveal="{ delay: 120 }" class="min-w-0">
+      <!-- accordion: hover-pause is scoped to the image group -->
+      <div
+        v-reveal="{ delay: 120 }"
+        class="min-w-0"
+        @mouseenter="paused = true"
+        @mouseleave="paused = false"
+        @focusin="paused = true"
+        @focusout="paused = false"
+      >
         <div class="flex h-[300px] gap-3 sm:h-[420px] sm:gap-4 lg:h-[520px]">
           <div
             v-for="(src, i) in current.images" :key="src"
@@ -119,10 +158,11 @@ onUnmounted(() => {
               class="absolute inset-x-6 bottom-7 h-[5px] overflow-hidden rounded-full bg-white/35"
             >
               <div
-                :key="index"
-                class="timer-fill h-full w-full rounded-full bg-white will-change-transform"
-                :style="{ animationDuration: `${DWELL}ms`, animationPlayState: paused ? 'paused' : 'running' }"
-                @animationend="onAnimationEnd"
+                class="h-full w-full rounded-full bg-white will-change-transform"
+                :style="{
+                  transform: `scaleX(${reducedMotion ? 1 : progress})`,
+                  transformOrigin: 'left center',
+                }"
               />
             </div>
           </div>
@@ -147,19 +187,6 @@ onUnmounted(() => {
   transform: translateX(-60px);
 }
 
-/* GPU-accelerated smooth scaleX progression instead of width reflow */
-.timer-fill {
-  transform-origin: left center;
-  animation-name: timer;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-  transform: scaleX(0);
-}
-@keyframes timer {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .slide-enter-active,
   .slide-leave-active {
@@ -169,10 +196,6 @@ onUnmounted(() => {
   .slide-leave-to {
     opacity: 1;
     transform: none;
-  }
-  .timer-fill {
-    animation: none;
-    transform: scaleX(1);
   }
 }
 </style>
