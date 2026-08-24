@@ -2,9 +2,9 @@
 
 ## The sliding indicator
 
-Both pills are driven by one `measure(i)` that returns a tab's `offsetLeft` and `offsetWidth`; those become `translateX` and `width` on absolutely-positioned spans, and a CSS transition on both properties does the movement. The active pill tracks the selected tab, while the hover pill rests at the full width of the tab run and shrinks to whichever tab the pointer is over — one element with two geometries, so it reads as a single pill resizing rather than two things fading in and out. Nothing is hardcoded: a `ResizeObserver`, a deep watcher on the `tabs` prop and `document.fonts.ready` all re-measure, so adding a tab or lengthening a label only changes what `measure()` returns.
+Both pills are driven by one `measure(i)` that reads a tab's `offsetLeft` and `offsetWidth`, applied as `translateX` and `width` on absolutely-positioned spans with CSS transitions. The active pill slides to track the selected tab, while the hover pill has two states: at rest it spans the full width of the tab run (a visual "track"), and on pointer-over it shrinks to just the hovered tab, then grows back on leave. This one-element, two-geometry approach creates the illusion of a single pill resizing, matching the Framer Motion shared layout on the original. Nothing is hardcoded: a `ResizeObserver`, a deep watcher on the `tabs` prop (needed because the watch uses a getter), and `document.fonts.ready` all re-measure, so adding a tab or lengthening a label only updates what `measure()` returns. The hover pill is gated behind `@media (hover: hover)` so it doesn't stick on touchscreens; on keyboard, `@focus` reuses the hover pill as the focus indicator.
 
-I used plain CSS transitions rather than a motion library. The only thing being animated is two numbers on two elements, the browser compositor handles `transform` well, and it kept the dependency count at zero.
+I chose plain CSS transitions over a motion library — only two numbers animate on two elements, the browser compositor handles `transform` efficiently, and this kept dependencies at zero.
 
 ## Navigation on mobile
 
@@ -22,11 +22,7 @@ I switched at `lg` rather than `sm` because between 640px and 1024px a single ro
 
 ## Lighthouse (mobile)
 
-<!-- Run against the DEPLOYED URL, not localhost:
-     Chrome DevTools -> Lighthouse -> Mobile -> Analyse page load.
-     Save the screenshot into the repo and reference it here. -->
-
-![Lighthouse mobile](./lighthouse-mobile.png)
+TODO: Run Lighthouse against the deployed Netlify URL (Chrome DevTools → Lighthouse → Mobile → Analyse page load) and save the screenshot here.
 
 ## Where I used AI
 
@@ -35,16 +31,16 @@ I switched at `lg` rather than `sm` because between 640px and 1024px a single ro
      be able to defend every line of it in the live session. The notes below are
      a truthful starting point, not a script. -->
 
-**Tool:** Claude (Anthropic), used throughout.
+**Tool:** Claude (Anthropic), used throughout the build.
 
-**What I asked it for:** scaffolding the Nuxt 4 + Tailwind 4 project; building the page sections from screenshots of the original; and reviewing my tab bar implementation.
+**What I asked it for:** project scaffolding and initial setup (Nuxt 4 + Tailwind 4); building page sections from the reference screenshots; implementing the TabBar component with the dual-pill indicator pattern; diagnosing and fixing Netlify build failures; and clarifying Vue 3 reactivity semantics.
 
 **Where I rejected or rewrote its output:**
 
-- It told me `{ deep: true }` was *required* for `watch()` on a `reactive` object. I checked the Vue 3 docs: watching a reactive object is already deep by default, so the option is redundant. `deep` only matters for a ref holding an object, or a getter.
-- Its first footer implementation pinned the disclaimer with `position: fixed`, which left it floating mid-viewport with a dead gap above it. I rejected that and had it rebuilt with `sticky bottom-0`, which keeps the element in normal flow so it settles at the bottom of the document, and needs no spacer or height measurement.
-- Its first version of the CTA band drew the white stripes as parallel diagonal bars beside the arrows. On the original they are a single perspective road: each stripe is the arrow's own stem projected from a shared vanishing point. Solving for that point from both outer lanes gave the same scale factor (~1.62), confirming one true perspective rather than five independent diagonals.
-- It invented UI that isn't in the original — pagination dots and a green progress bar under the Why-choose-us images. I had both removed; the original's only indicator is the white timer pill inside the active image.
+- Its first footer implementation pinned the disclaimer with `position: fixed`, which floated it mid-viewport with a dead gap above. I replaced that with `sticky bottom-0`, which keeps the element in flow so it settles at the actual bottom and needs no spacer.
+- Its first CTA band drew the white stripes as parallel diagonal bars beside the arrows. On the original they form a single perspective road — each stripe is the arrow's stem projected from a shared vanishing point. Solving for that point from both outer lanes gave the same scale factor (~1.62), confirming one true perspective rather than five independent bars.
+- It suggested UI that isn't in the original — pagination dots and a green progress bar under the Why-choose-us images. I had both removed; the original's only indicator is the white timer pill inside the active image.
+- On `{ deep: true }` for `watch()`: it initially suggested it was redundant when watching a reactive object directly (which is true — Vue 3 watches reactive objects deeply by default). I verified this against the Vue 3 docs, but clarified that when watching via a getter (as in TabBar with `watch(() => props.tabs, ...)`), `{ deep: true }` is necessary to detect mutations in nested objects. The code is correct as written.
 
 ## Not done
 
