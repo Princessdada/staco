@@ -127,7 +127,7 @@ const barStyle = computed(() => ({
     </svg>
 
     <!-- container for decorative ribbon matching exact original bezier curve -->
-    <div class="pointer-events-none absolute inset-0 z-20 mx-auto hidden h-full w-full max-w-[1213px] px-4 sm:px-6 lg:block">
+    <div class="pointer-events-none absolute inset-0 z-0 mx-auto hidden h-full w-full max-w-[1213px] px-4 sm:px-6 lg:block">
       <svg
         viewBox="0 0 1140 800"
         fill="none"
@@ -136,21 +136,15 @@ const barStyle = computed(() => ({
         aria-hidden="true"
       >
         <!--
-          One visual line in two strokes. The FRONT stroke: down from the top
-          of the page, across the card's corner, a full counterclockwise loop,
-          ending in a round tip resting on the border radius. The TAIL starts
-          3 units below the card's bottom edge (y583) so it reads as the same
-          line re-emerging from behind the image.
+          ONE continuous stroke, painted BEHIND the card (z-0). Descent from
+          the top of the page, loop to the left of the card's corner, then the
+          tip slides in under the border radius — the path continues but the
+          card hides it — runs down behind the photo, and re-emerges at the
+          bottom edge (y583) as the tail. The card itself does the clipping,
+          so the "dives behind, comes out the bottom" read is automatic.
         -->
         <path
-          d="M700 270C690 250 672 236 654 236C630 236 617 254 617 278C617 304 634 320 658 320C690 322 722 316 750 304C806 288 856 254 888 208C910 174 918 116 919 60C920 20 920 -10 920 -40"
-          stroke="currentColor"
-          stroke-width="10.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M770 586C760 655 700 728 610 786C580 805 560 818 545 830"
+          d="M872 -40C884 40 884 110 852 158C826 196 776 218 730 232C700 240 662 242 640 250C610 258 576 270 576 298C576 326 602 340 634 338C668 336 686 316 690 290C692 272 692 260 698 252C724 278 762 420 770 583C760 655 700 728 610 786C580 805 560 818 545 830"
           stroke="currentColor"
           stroke-width="10.5"
           stroke-linecap="round"
