@@ -135,8 +135,22 @@ const barStyle = computed(() => ({
         preserveAspectRatio="none"
         aria-hidden="true"
       >
+        <!--
+          One visual line in two strokes. The FRONT stroke: down from the top
+          of the page, across the card's corner, a full counterclockwise loop,
+          ending in a round tip resting on the border radius. The TAIL starts
+          3 units below the card's bottom edge (y583) so it reads as the same
+          line re-emerging from behind the image.
+        -->
         <path
-          d="M686 252C676 240 660 226 646 227C630 228 622 240 622 254C622 269 630 279 644 285C662 293 686 296 706 294C742 290 780 278 812 258L878 96C892 52 904 8 912 -40"
+          d="M700 270C690 250 672 236 654 236C630 236 617 254 617 278C617 304 634 320 658 320C690 322 722 316 750 304C806 288 856 254 888 208C910 174 918 116 919 60C920 20 920 -10 920 -40"
+          stroke="currentColor"
+          stroke-width="10.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M770 586C760 655 700 728 610 786C580 805 560 818 545 830"
           stroke="currentColor"
           stroke-width="10.5"
           stroke-linecap="round"
