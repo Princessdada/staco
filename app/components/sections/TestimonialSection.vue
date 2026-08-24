@@ -117,9 +117,11 @@ onUnmounted(() => {
     <div class="mx-auto w-full max-w-[1213px] px-4 sm:px-6">
       <div v-reveal class="overflow-hidden rounded-[32px] bg-white">
         <div class="grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16 lg:p-14">
-          <!-- portrait: mint arch in front, forest arch peeking out behind; hover-pause scoped here -->
+          <!-- portrait: mint arch in front, forest arch peeking out behind; hover-pause scoped here.
+               Width is capped while the card is stacked (below lg) — uncapped, the
+               arch balloons to the full card width on tablets. -->
           <div
-            class="relative min-w-0"
+            class="relative mx-auto w-full max-w-[420px] min-w-0 lg:mx-0 lg:max-w-none"
             @mouseenter="paused = true"
             @mouseleave="paused = false"
             @focusin="paused = true"
