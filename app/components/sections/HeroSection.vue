@@ -108,11 +108,17 @@ const barStyle = computed(() => ({
   <section class="relative overflow-hidden bg-ink pt-[150px] pb-20 sm:pt-[190px] lg:pt-[243px] lg:pb-[140px]">
     <!-- decorative swoosh + leaves, purely ornamental -->
     <svg
-      class="pointer-events-none absolute -top-10 right-0 hidden h-[130%] w-[62%] text-accent lg:block"
+      class="pointer-events-none absolute -top-10 right-0 z-20 hidden h-[130%] w-[62%] text-accent lg:block"
       viewBox="0 0 600 900" fill="none" aria-hidden="true"
     >
+      <!--
+        The ribbon curls once just outside the card's top-left corner, then runs
+        down ACROSS the card and out to the bottom left. z-20 puts it above the
+        grid so it passes in FRONT of the photo the way the original does; as a
+        sibling earlier in the DOM it was painting behind and disappearing.
+      -->
       <path
-        d="M470 -40C470 160 300 150 250 250c-50 100 120 130 190 235 70 105-70 200-140 300-40 57-60 120-60 175"
+        d="M440 -60C442 40 420 95 380 130C330 172 250 140 218 175C185 212 205 262 250 252C292 243 300 195 265 178C232 162 220 230 235 300C252 380 268 450 250 540C232 630 175 700 140 790C118 848 105 875 100 940"
         stroke="currentColor" stroke-width="7" stroke-linecap="round"
       />
     </svg>
@@ -167,7 +173,7 @@ const barStyle = computed(() => ({
       </div>
 
       <div v-reveal="{ delay: 120 }" class="relative min-w-0">
-        <div class="relative overflow-hidden rounded-[28px] rounded-tl-[72px] shadow-2xl">
+        <div class="relative overflow-hidden rounded-[28px] shadow-2xl">
           <img
             src="/img/hero-still.webp"
             alt="A Staco team gathered around a laptop in an open-plan office"

@@ -36,8 +36,8 @@ body { background: #fff; overflow-x: clip; }
    the tab bar, which keeps its own matchMedia logic. */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity .8s cubic-bezier(.22,.61,.36,1), transform .8s cubic-bezier(.22,.61,.36,1);
+  transform: translateY(64px);
+  transition: opacity .9s cubic-bezier(.22,.61,.36,1), transform .9s cubic-bezier(.22,.61,.36,1);
   will-change: opacity, transform;
 }
 .reveal.is-in { opacity: 1; transform: none; }
