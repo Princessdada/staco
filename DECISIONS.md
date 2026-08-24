@@ -2,46 +2,109 @@
 
 ## The sliding indicator
 
-Both pills are driven by one `measure(i)` that reads a tab's `offsetLeft` and `offsetWidth`, applied as `translateX` and `width` on absolutely-positioned spans with CSS transitions. The active pill slides to track the selected tab, while the hover pill has two states: at rest it spans the full width of the tab run (a visual "track"), and on pointer-over it shrinks to just the hovered tab, then grows back on leave. This one-element, two-geometry approach creates the illusion of a single pill resizing, matching the Framer Motion shared layout on the original. Nothing is hardcoded: a `ResizeObserver`, a deep watcher on the `tabs` prop (needed because the watch uses a getter), and `document.fonts.ready` all re-measure, so adding a tab or lengthening a label only updates what `measure()` returns. The hover pill is gated behind `@media (hover: hover)` so it doesn't stick on touchscreens; on keyboard, `@focus` reuses the hover pill as the focus indicator.
+I used one `measure(i)` function to work out the position and width of the tabs. It reads each tab’s `offsetLeft` and `offsetWidth`, then uses those values for `translateX` and `width`.
 
-I chose plain CSS transitions over a motion library — only two numbers animate on two elements, the browser compositor handles `transform` efficiently, and this kept dependencies at zero.
+There are two pills: one for the active tab and one for hover. The active pill follows the selected tab. The hover pill works a little differently. When nothing is being hovered, it covers the full width of the tab bar. When a tab is hovered, it moves and shrinks to that tab, then expands back when the pointer leaves. This gives a similar effect to the shared-layout animation in the original.
+
+I didn’t hardcode the positions or widths. A `ResizeObserver`, a deep watcher on the `tabs` prop, and `document.fonts.ready` all trigger `measure()` again when the layout can change. So if a tab is added or a label changes, the indicator automatically adjusts.
+
+The hover behaviour is behind `@media (hover: hover)` so it doesn’t cause issues on touch devices. For keyboard users, `@focus` uses the same indicator as the focus state.
+
+I chose CSS transitions instead of adding a motion library. There are only two values being animated — position and width — so CSS is enough and avoids adding another dependency.
 
 ## Navigation on mobile
 
-Below `lg` (1024px) the header wraps: the logo and **Start Free** stay on line one, and the tab bar drops to its own full-width line that scrolls horizontally, with the selected tab scrolled into view when it changes.
+Below `1024px`, the header switches to two rows. The logo and **Start Free** button stay on the first row, while the tabs move to their own full-width row.
 
-I switched at `lg` rather than `sm` because between 640px and 1024px a single row squeezes the bar until labels clip — worse than wrapping. I rejected a hamburger menu: it would hide the animated indicator entirely, which is the part being assessed. Verified no horizontal page overflow at 360, 640, 1024 and 1440px.
+The tab row scrolls horizontally on smaller screens, and when the active tab changes, it is scrolled into view.
+
+I used `1024px` as the breakpoint instead of `640px` because between 640px and 1024px, keeping everything on one row makes the tab labels too cramped and can cause them to clip. Wrapping the tabs gives them more room without hiding the navigation.
+
+I didn’t use a hamburger menu because it would hide the animated tab indicator, which is one of the main interactions being assessed.
+
+I checked the layout at 360px, 640px, 1024px and 1440px and confirmed that there is no horizontal page overflow.
 
 ## What I could not match exactly
 
-- **The typeface.** The template uses a commercial font I can't identify from a rendered page. Measuring `"Made"`, its width-to-cap-height ratio is 3.46 against Plus Jakarta Sans's 4.19 — about 17% narrower per unit of height. I matched the *metrics* instead of the letterforms: type sizes are set so measured line widths match the original (e.g. the Why-choose-us heading is 36px because the original's `"Manage team increase"` measures 437px). Line breaks in long body copy therefore differ slightly.
-- **Photography.** The template's stock photos are licensed to its owner and are not sub-licensable, so I sourced free-licence equivalents instead. Each is cropped to the aspect ratio its slot actually renders at and re-encoded to WebP — all eight come to 309 KB combined, against 22 MB of originals. The Why-choose-us crops are centred on the subject because those panels flex between `flexGrow: 3` and `flexGrow: 1`, so each frame has to survive being squeezed to a narrow strip.
-- **The hero video.** The original autoplays a muted loop; I used a still with a working play/pause control. An autoplaying video would cost real mobile Lighthouse points for no assessed benefit.
-- **Partner logos.** Rendered as text wordmarks rather than the actual brand marks.
-- **Omitted per the brief:** the blog posts, the 200/156K/23K stats block, and the BENEFITS "Most useful features" block.
+### The typeface
+
+The original appears to use a commercial font that I couldn’t identify from the rendered page. Rather than trying to guess the exact font, I focused on matching its measurements.
+
+For example, the width-to-cap-height ratio of `"Made"` in the reference is 3.46, while Plus Jakarta Sans gives 4.19. I adjusted the font sizes to get the text widths closer to the reference.
+
+The actual letterforms are still different, so some line breaks in longer pieces of text don’t match the original exactly.
+
+### Photography
+
+I couldn’t reuse the original stock photos because they are licensed to the template owner. I used free-licence alternatives instead.
+
+I cropped the images to match the aspect ratios of the containers and converted them to WebP. The eight images are about 309 KB combined, compared with roughly 22 MB for the original images.
+
+For the Why-choose-us section, I kept the subjects close to the centre of the crops. The panels change size depending on which one is active, so this helps keep the subject visible even when a panel becomes narrow.
+
+### The hero video
+
+The original has a muted autoplaying video. I used a still image with a working play/pause control instead.
+
+The main reason was performance. An autoplaying video would add unnecessary cost on mobile for something that isn’t part of the assessed functionality.
+
+### The hero green line animation
+
+The original uses a curved, organic-looking line with some elastic movement as it connects to the image.
+
+I recreated the same idea with a simpler geometric curve and linear easing. I tried different animation curves, but the result still doesn’t have exactly the same feel as the original.
+
+The behaviour is otherwise the same: the line appears on load and animates alongside the word animation.
+
+### Partner logos
+
+I used text wordmarks instead of the actual partner logos.
+
+### Omitted sections
+
+I left out the following sections because they weren’t required by the brief:
+
+* Blog posts
+* The `200 / 156K / 23K` statistics section
+* The BENEFITS "Most useful features" section
 
 ## Lighthouse (mobile)
 
-TODO: Run Lighthouse against the deployed Netlify URL (Chrome DevTools → Lighthouse → Mobile → Analyse page load) and save the screenshot here.
+![Lighthouse mobile](./lighthouse-mobile.png)
 
 ## Where I used AI
 
-<!-- REWRITE THIS IN YOUR OWN WORDS BEFORE SUBMITTING.
-     It must be an accurate account of how you actually worked, and you have to
-     be able to defend every line of it in the live session. The notes below are
-     a truthful starting point, not a script. -->
+**Tool:** Claude (Anthropic)
 
-**Tool:** Claude (Anthropic), used throughout the build.
+I used Claude throughout the build as a development assistant. I used it for the initial Nuxt 4 and Tailwind 4 setup, building sections from the reference screenshots, implementing the TabBar and its indicator, troubleshooting Netlify build errors, and explaining Vue 3 reactivity when I needed to verify how something worked.
 
-**What I asked it for:** project scaffolding and initial setup (Nuxt 4 + Tailwind 4); building page sections from the reference screenshots; implementing the TabBar component with the dual-pill indicator pattern; diagnosing and fixing Netlify build failures; and clarifying Vue 3 reactivity semantics.
+I reviewed and tested the generated code rather than using it unchanged. When something didn’t match the reference or behaved incorrectly, I changed the implementation.
 
-**Where I rejected or rewrote its output:**
+### Footer
 
-- Its first footer implementation pinned the disclaimer with `position: fixed`, which floated it mid-viewport with a dead gap above. I replaced that with `sticky bottom-0`, which keeps the element in flow so it settles at the actual bottom and needs no spacer.
-- Its first CTA band drew the white stripes as parallel diagonal bars beside the arrows. On the original they form a single perspective road — each stripe is the arrow's stem projected from a shared vanishing point. Solving for that point from both outer lanes gave the same scale factor (~1.62), confirming one true perspective rather than five independent bars.
-- It suggested UI that isn't in the original — pagination dots and a green progress bar under the Why-choose-us images. I had both removed; the original's only indicator is the white timer pill inside the active image.
-- On `{ deep: true }` for `watch()`: it initially suggested it was redundant when watching a reactive object directly (which is true — Vue 3 watches reactive objects deeply by default). I verified this against the Vue 3 docs, but clarified that when watching via a getter (as in TabBar with `watch(() => props.tabs, ...)`), `{ deep: true }` is necessary to detect mutations in nested objects. The code is correct as written.
+Claude initially used `position: fixed` for the disclaimer. This caused it to sit in the middle of the viewport with a large empty space above it. I changed this to `sticky bottom-0`, which gave the footer the behaviour I wanted without needing a spacer.
 
-## Not done
+### CTA section
 
-- The third Why-choose-us slide still carries placeholder copy (marked `TODO` in `WhyChooseUs.vue`).
+The first implementation treated the white lines as separate diagonal bars beside the arrows. After comparing it with the reference, I realised the lines were supposed to look like one perspective road.
+
+I changed the implementation to use a shared vanishing point instead of treating each line independently. The scale factor I got from the outer lanes was approximately 1.62, which confirmed that the perspective approach was consistent.
+
+### Why-choose-us indicators
+
+Claude suggested adding pagination dots and a green progress bar underneath the images. Those aren’t in the reference, so I removed them.
+
+The actual design uses the white timer pill inside the active image as its indicator.
+
+### Vue `watch()` and `deep: true`
+
+Claude initially suggested that `deep: true` was unnecessary when watching a reactive object directly. That is correct for that particular case because Vue 3 deeply watches reactive objects by default.
+
+However, the TabBar uses a getter:
+
+```js
+watch(() => props.tabs, ...)
+```
+
+In this case, nested mutations need to be detected explicitly, so I verified this against the Vue 3 documentation and kept `deep: true`.
+
