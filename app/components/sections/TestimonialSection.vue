@@ -131,15 +131,23 @@ onUnmounted(() => {
               class="absolute -left-2 top-4 h-[86%] w-[78%] rounded-t-full bg-forest"
               aria-hidden="true"
             />
-            <Transition name="fade" mode="out-in">
-              <div :key="current.id" class="relative ml-8 overflow-hidden rounded-t-full bg-[#bdeba4]">
+            <!-- Seamless stacked avatar portraits -->
+            <div class="relative ml-8 h-[320px] overflow-hidden rounded-t-full bg-[#bdeba4] sm:h-[400px]">
+              <div
+                v-for="(quote, i) in quotes"
+                :key="quote.id"
+                class="absolute inset-0 transition-opacity duration-500 ease-in-out"
+                :class="i === index ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'"
+              >
                 <img
-                  :src="current.photo" :alt="`${current.name}, ${current.role}`"
-                  width="600" height="760" loading="lazy" decoding="async"
-                  class="h-[320px] w-full object-cover sm:h-[400px]"
+                  :src="quote.photo"
+                  :alt="`${quote.name}, ${quote.role}`"
+                  width="600"
+                  height="760"
+                  class="h-full w-full object-cover"
                 />
               </div>
-            </Transition>
+            </div>
           </div>
 
           <div class="min-w-0">
@@ -153,17 +161,23 @@ onUnmounted(() => {
               </span>
             </span>
 
-            <Transition name="fade" mode="out-in">
-              <blockquote :key="current.id" class="mt-10">
+            <!-- Seamless stacked quote text -->
+            <div class="relative mt-10 min-h-[220px]">
+              <blockquote
+                v-for="(quote, i) in quotes"
+                :key="quote.id"
+                class="transition-opacity duration-500 ease-in-out"
+                :class="i === index ? 'opacity-100 relative z-10' : 'opacity-0 absolute inset-0 z-0 pointer-events-none'"
+              >
                 <p class="max-w-2xl text-[19px] leading-[1.9] text-heading sm:text-[21px]">
-                  {{ current.body }}
+                  {{ quote.body }}
                 </p>
                 <footer class="mt-10">
-                  <p class="text-[17px] font-bold text-heading">{{ current.name }}</p>
-                  <p class="mt-1.5 text-[16px] text-body">{{ current.role }}</p>
+                  <p class="text-[17px] font-bold text-heading">{{ quote.name }}</p>
+                  <p class="mt-1.5 text-[16px] text-body">{{ quote.role }}</p>
                 </footer>
               </blockquote>
-            </Transition>
+            </div>
           </div>
         </div>
 
@@ -190,19 +204,9 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.35s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .fade-enter-active,
-  .fade-leave-active { transition: none; }
-  .fade-enter-from,
-  .fade-leave-to { opacity: 1; }
+  * {
+    transition: none !important;
+  }
 }
 </style>
