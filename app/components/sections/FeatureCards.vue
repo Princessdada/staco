@@ -8,12 +8,15 @@ const cards = [
 
 <template>
   <section class="bg-white py-16 sm:py-24" aria-label="What Staco offers">
-    <div class="mx-auto grid w-full max-w-[1213px] gap-6 px-4 sm:px-6 lg:grid-cols-3 lg:gap-8">
+    <!-- 1-up on phones, 2-up on tablets (third card spans the row), 3-up at lg.
+         Without the sm step each card is a full-width flat band at 640-1024. -->
+    <div class="mx-auto grid w-full max-w-[1213px] gap-6 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:gap-8">
       <article
         v-for="(card, i) in cards"
         :key="card.key"
         v-reveal="{ delay: i * 110 }"
         class="group flex flex-col rounded-[24px] bg-card p-8 transition-colors sm:p-9"
+        :class="i === 2 ? 'sm:col-span-2 lg:col-span-1' : ''"
       >
         <span class="grid h-14 w-14 place-items-center rounded-2xl" :class="card.tint" aria-hidden="true">
           <svg viewBox="0 0 24 24" class="h-7 w-7 text-black/65" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
