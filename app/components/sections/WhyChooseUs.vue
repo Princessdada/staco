@@ -34,8 +34,6 @@ const slides = [
     points: ['99% Survey Report', 'Trusted by teams', 'Self-Service'],
   },
   {
-    // TODO(onetro): third slide. Heading, eyebrow colour and the three bullet
-    // points still to be read off the original — placeholder copy for now.
     eyebrow: 'text-brand',
     heading: 'Build lasting client relationships',
     body: 'We use as filler text for layouts, non-readability is of great importance but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful nor again is there anyone.',
