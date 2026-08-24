@@ -126,21 +126,23 @@ const barStyle = computed(() => ({
       <path d="M8.82762 7.31652C-2.25929 15.2616 -1.57861 29.3022 8.24752 39.1752C17.8521 48.9776 31.6961 50.2641 39.7268 38.9026C45.4458 31.1026 44.49 18.684 48.0973 0.246201C29.4497 3.29007 16.6336 1.84265 8.82762 7.31652Z" fill="currentColor" fill-opacity="0.3"/>
     </svg>
 
-    <!-- container for decorative lines matching original template sizing -->
-    <div class="pointer-events-none absolute inset-x-0 top-0 z-0 mx-auto h-full w-full max-w-[1213px] px-4 sm:px-6">
-      <!-- decorative green line 1 (upper loop) -->
-      <span class="absolute -top-4 right-[25.5%] hidden h-[40%] w-auto max-w-none text-[#B2EDA1] lg:block" aria-hidden="true">
-        <svg viewBox="0 0 299 353" fill="none" class="h-full w-auto" xmlns="http://www.w3.org/2000/svg">
-          <path d="M82.8994 299.957C1.6656 202.325 -35.6931 344.357 74.3868 347.838C184.467 351.319 385.434 265.915 246.722 0.984375" stroke="currentColor" stroke-width="10" stroke-miterlimit="10" />
-        </svg>
-      </span>
-
-      <!-- decorative green line 2 (lower curve) -->
-      <span class="absolute bottom-[3px] right-[32%] hidden h-[70%] w-auto max-w-none text-[#B2EDA1] lg:block" aria-hidden="true">
-        <svg viewBox="0 0 275 605" fill="none" class="h-full w-auto" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1.71289 599.989C1.71289 599.989 468.069 436.813 169.913 2.97119" stroke="currentColor" stroke-width="10" stroke-miterlimit="10" />
-        </svg>
-      </span>
+    <!-- container for decorative ribbon matching exact original bezier curve -->
+    <div class="pointer-events-none absolute inset-0 z-0 mx-auto hidden h-full w-full max-w-[1213px] px-4 sm:px-6 lg:block">
+      <svg
+        viewBox="0 0 1140 800"
+        fill="none"
+        class="h-full w-full text-[#B2EDA1]"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M 839.53 -31.11 C 965.27 209.06, 783.09 286.48, 683.30 283.32 C 583.52 280.16, 617.38 151.41, 691.02 239.92 C 965.31 641.32, 533.64 792.36, 533.64 792.36"
+          stroke="currentColor"
+          stroke-width="9.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </div>
 
     <div class="relative z-10 mx-auto grid w-full max-w-[1213px] items-center gap-12 px-4 lg:items-start sm:px-6 lg:grid-cols-[1.42fr_1fr] lg:gap-10">
