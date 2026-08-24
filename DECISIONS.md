@@ -15,7 +15,7 @@ I switched at `lg` rather than `sm` because between 640px and 1024px a single ro
 ## What I could not match exactly
 
 - **The typeface.** The template uses a commercial font I can't identify from a rendered page. Measuring `"Made"`, its width-to-cap-height ratio is 3.46 against Plus Jakarta Sans's 4.19 — about 17% narrower per unit of height. I matched the *metrics* instead of the letterforms: type sizes are set so measured line widths match the original (e.g. the Why-choose-us heading is 36px because the original's `"Manage team increase"` measures 437px). Line breaks in long body copy therefore differ slightly.
-- **Photography.** Placeholder imagery stands in for the template's licensed stock photos.
+- **Photography.** The template's stock photos are licensed to its owner and are not sub-licensable, so I sourced free-licence equivalents instead. Each is cropped to the aspect ratio its slot actually renders at and re-encoded to WebP — all eight come to 309 KB combined, against 22 MB of originals. The Why-choose-us crops are centred on the subject because those panels flex between `flexGrow: 3` and `flexGrow: 1`, so each frame has to survive being squeezed to a narrow strip.
 - **The hero video.** The original autoplays a muted loop; I used a still with a working play/pause control. An autoplaying video would cost real mobile Lighthouse points for no assessed benefit.
 - **Partner logos.** Rendered as text wordmarks rather than the actual brand marks.
 - **Omitted per the brief:** the blog posts, the 200/156K/23K stats block, and the BENEFITS "Most useful features" block.
@@ -49,4 +49,3 @@ I switched at `lg` rather than `sm` because between 640px and 1024px a single ro
 ## Not done
 
 - The third Why-choose-us slide still carries placeholder copy (marked `TODO` in `WhyChooseUs.vue`).
-- Real photography has not been substituted for the placeholder images.

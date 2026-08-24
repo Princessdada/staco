@@ -18,7 +18,7 @@
 // the active panel simply widens, so the wide one shows the full frame while
 // the narrow ones show a cropped slice of the same picture. The active panel
 // therefore tracks the slide index: slide 0 widens panel 0, and so on.
-const IMAGES = ['/img/team-1.svg', '/img/team-2.svg', '/img/team-3.svg']
+const IMAGES = ['/img/team-1.webp', '/img/team-2.webp', '/img/team-3.webp']
 
 const slides = [
   {

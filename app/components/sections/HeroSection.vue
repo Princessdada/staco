@@ -169,8 +169,10 @@ const barStyle = computed(() => ({
       <div v-reveal="{ delay: 120 }" class="relative min-w-0">
         <div class="relative overflow-hidden rounded-[28px] rounded-tl-[72px] shadow-2xl">
           <img
-            src="/img/hero-video.svg" alt="Staco team in a strategy meeting"
-            width="1200" height="850" class="h-full w-full object-cover" fetchpriority="high"
+            src="/img/hero-still.webp"
+            alt="A Staco team gathered around a laptop in an open-plan office"
+            width="1200" height="850" class="h-full w-full object-cover"
+            fetchpriority="high" decoding="async"
           />
           <button
             type="button"

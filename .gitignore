@@ -7,3 +7,8 @@ dist
 *.log
 .env
 *.tar.gz
+
+# full-resolution source photos, not shipped
+_originals/
+_preview/
+_to_delete/

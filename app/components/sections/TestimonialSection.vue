@@ -15,28 +15,28 @@ const quotes = [
     body: 'Making this the first true generator on the Internet. It uses a dictionary of over words, combined with a handful of model sentence structures, to generate.',
     name: 'Dennis Lail',
     role: 'Marketer',
-    photo: '/img/avatar-1.svg',
+    photo: '/img/avatar-1.webp',
   },
   {
     id: 2,
     body: 'Very denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, combined with a handful so blinded.',
-    name: 'Peter Leo,',
+    name: 'Petra Leo,',
     role: 'CTO - Criston',
-    photo: '/img/avatar-2.svg',
+    photo: '/img/avatar-2.webp',
   },
   {
     id: 3,
     body: 'We use as filler text for layouts, non-readability is of great importance but because those who do not know how to pleasure rationally encounter consequences that are.',
     name: 'Aurthoe De,',
     role: 'CEO - Dorid Co',
-    photo: '/img/avatar-3.svg',
+    photo: '/img/avatar-3.webp',
   },
   {
     id: 4,
     body: 'I must explain to you how all this mistaken. Idea of denouncing pleasure and praising pain was born and I will give you a complete account.',
     name: 'Roe Smith',
     role: 'Director, Growth Marketing',
-    photo: '/img/avatar-4.svg',
+    photo: '/img/avatar-4.webp',
   },
 ]
 
@@ -135,7 +135,7 @@ onUnmounted(() => {
               <div :key="current.id" class="relative ml-8 overflow-hidden rounded-t-full bg-[#bdeba4]">
                 <img
                   :src="current.photo" :alt="`${current.name}, ${current.role}`"
-                  width="600" height="760" loading="lazy"
+                  width="600" height="760" loading="lazy" decoding="async"
                   class="h-[320px] w-full object-cover sm:h-[400px]"
                 />
               </div>
