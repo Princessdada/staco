@@ -31,8 +31,10 @@ const socials = [
     <div class="relative z-10 bg-mist pb-14">
     <div class="mx-auto w-full max-w-[1213px] px-4 sm:px-6">
       <div class="rounded-[32px] bg-ink px-6 pt-14 sm:px-10 sm:pt-20 lg:px-16">
-        <div class="grid gap-12 lg:grid-cols-[1.25fr_repeat(4,0.95fr)] lg:gap-6">
-          <div>
+        <!-- brand block full-width, then link columns 2-up from sm; single-file
+             stacking made the footer needlessly long on tablets -->
+        <div class="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.25fr_repeat(4,0.95fr)] lg:gap-6">
+          <div class="sm:col-span-2 lg:col-span-1">
             <SiteLogo tone="light" />
             <p class="mt-8 max-w-xs text-lg leading-relaxed text-white/65">
               Staco is the dedicated platform for performance management that helps
