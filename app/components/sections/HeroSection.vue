@@ -200,7 +200,7 @@ const barStyle = computed(() => ({
       </div>
 
       <div v-reveal="{ delay: 120 }" class="relative min-w-0">
-        <div class="relative overflow-hidden rounded-[28px] shadow-2xl">
+        <div class="relative aspect-[1400/991] overflow-hidden rounded-[28px] shadow-2xl">
           <img
             src="/img/hero-still.webp"
             alt="A Staco team gathered around a laptop in an open-plan office"
