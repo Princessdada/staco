@@ -39,6 +39,17 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'en' },
+      // v-reveal ships its start offset as an inline style from the server so
+      // the first paint already has content sitting low (app/utils/reveal.js).
+      // With JS off nothing would ever clear it, so undo it here. Inline styles
+      // win on specificity, hence !important.
+      noscript: [
+        {
+          children: '[data-reveal]{transform:none !important}',
+          tagPosition: 'head',
+          type: 'text/css',
+        },
+      ],
       meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }],
     },
   },

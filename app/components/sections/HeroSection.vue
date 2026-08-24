@@ -106,27 +106,44 @@ const barStyle = computed(() => ({
       subcopy -> buttons . 54px      button height ...... 60px
   -->
   <section class="relative overflow-hidden bg-ink pt-[150px] pb-20 sm:pt-[190px] lg:pt-[243px] lg:pb-[140px]">
-    <!-- decorative swoosh + leaves, purely ornamental -->
-    <svg
-      class="pointer-events-none absolute -top-10 right-0 z-20 hidden h-[130%] w-[62%] text-accent lg:block"
-      viewBox="0 0 600 900" fill="none" aria-hidden="true"
-    >
-      <!--
-        The ribbon curls once just outside the card's top-left corner, then runs
-        down ACROSS the card and out to the bottom left. z-20 puts it above the
-        grid so it passes in FRONT of the photo the way the original does; as a
-        sibling earlier in the DOM it was painting behind and disappearing.
-      -->
-      <path
-        d="M440 -60C442 40 420 95 380 130C330 172 250 140 218 175C185 212 205 262 250 252C292 243 300 195 265 178C232 162 220 230 235 300C252 380 268 450 250 540C232 630 175 700 140 790C118 848 105 875 100 940"
-        stroke="currentColor" stroke-width="7" stroke-linecap="round"
-      />
+    <!-- floating leaves from original template -->
+    <svg width="39" height="45" viewBox="0 0 39 45" fill="none" class="pointer-events-none absolute right-[30%] top-[20%] hidden text-accent lg:block" aria-hidden="true">
+      <path d="M4.35993 8.12197C-0.593748 13.8731 -1.08911 28.1803 2.52242 35.9656C7.8417 47.1326 27.7987 47.1679 33.3327 36.604C37.5794 28.3821 36.4727 17.5359 38.6821 0.572389C22.3362 3.68367 9.16665 2.37763 4.35993 8.12197Z" fill="currentColor" fill-opacity="0.3"/>
     </svg>
-    <span class="pointer-events-none absolute left-[26%] top-[24%] hidden h-14 w-14 rounded-tl-[999px] rounded-br-[999px] rounded-tr-[999px] bg-white/8 lg:block" aria-hidden="true" />
-    <span class="pointer-events-none absolute left-[46%] top-[44%] hidden h-10 w-16 rounded-full bg-white/8 lg:block" aria-hidden="true" />
-    <span class="pointer-events-none absolute left-[46%] bottom-[12%] hidden h-8 w-10 rounded-t-full bg-white/8 lg:block" aria-hidden="true" />
+    <svg width="52" height="41" viewBox="0 0 52 41" fill="none" class="pointer-events-none absolute left-[44%] top-[35%] hidden text-accent lg:block" aria-hidden="true">
+      <path d="M18.6144 0.0465448C13.3054 -0.784969 1.64645 9.71291 0.397269 16.469C-1.99699 29.5653 6.64316 41.5183 20.5923 40.8947C28.816 40.4789 36.6234 31.2283 51.9258 21.2502C36.4152 10.7523 28.0873 1.81351 18.6144 0.0465448Z" fill="currentColor" fill-opacity="0.3"/>
+    </svg>
+    <svg width="46" height="36" viewBox="0 0 46 36" fill="none" class="pointer-events-none absolute left-[45%] bottom-[18%] hidden text-accent lg:block" aria-hidden="true">
+      <path d="M11.4394 3.70549C-0.531861 10.5655 -4.38354 21.3752 6.75495 35.7188C18.3098 31.2494 30.3852 26.5721 46 20.5437C36.3188 2.66613 26.3254 -5.0254 11.4394 3.70549Z" fill="currentColor" fill-opacity="0.3"/>
+    </svg>
+    <svg width="43" height="42" viewBox="0 0 43 42" fill="none" class="pointer-events-none absolute right-[40%] top-[56%] hidden text-accent lg:block" aria-hidden="true">
+      <path d="M11.8398 0C-0.443787 11.5373 -4.19132 22.8667 5.48979 33.5724C16.7324 45.9412 29.0159 42.8229 42.2364 27.4399C30.6815 17.046 21.5209 8.73089 11.8398 0Z" fill="currentColor" fill-opacity="0.3"/>
+    </svg>
+    <svg width="22" height="12" viewBox="0 0 22 12" fill="none" class="pointer-events-none absolute left-[25%] bottom-[13%] hidden text-accent lg:block" aria-hidden="true">
+      <path d="M2.87043 11.9367C9.11631 10.5855 15.5704 9.1303 21.8163 7.77909C21.3999 5.28455 21.0876 2.89395 20.6712 0.399414C14.0089 1.02305 7.34665 1.64669 0.892578 2.27032C1.51717 5.59638 2.24584 8.71455 2.87043 11.9367Z" fill="currentColor" fill-opacity="0.3"/>
+    </svg>
+    <svg width="49" height="47" viewBox="0 0 49 47" fill="none" class="pointer-events-none absolute left-[25%] top-[18%] hidden text-accent lg:block" aria-hidden="true">
+      <path d="M8.82762 7.31652C-2.25929 15.2616 -1.57861 29.3022 8.24752 39.1752C17.8521 48.9776 31.6961 50.2641 39.7268 38.9026C45.4458 31.1026 44.49 18.684 48.0973 0.246201C29.4497 3.29007 16.6336 1.84265 8.82762 7.31652Z" fill="currentColor" fill-opacity="0.3"/>
+    </svg>
 
-    <div class="relative mx-auto grid w-full max-w-[1213px] items-center gap-12 px-4 lg:items-start sm:px-6 lg:grid-cols-[1.42fr_1fr] lg:gap-10">
+    <!-- container for decorative lines matching original template sizing -->
+    <div class="pointer-events-none absolute inset-x-0 top-0 z-0 mx-auto h-full w-full max-w-[1213px] px-4 sm:px-6">
+      <!-- decorative green line 1 (upper loop) -->
+      <span class="absolute -top-4 right-[25.5%] hidden h-[40%] w-auto max-w-none text-[#B2EDA1] lg:block" aria-hidden="true">
+        <svg viewBox="0 0 299 353" fill="none" class="h-full w-auto" xmlns="http://www.w3.org/2000/svg">
+          <path d="M82.8994 299.957C1.6656 202.325 -35.6931 344.357 74.3868 347.838C184.467 351.319 385.434 265.915 246.722 0.984375" stroke="currentColor" stroke-width="10" stroke-miterlimit="10" />
+        </svg>
+      </span>
+
+      <!-- decorative green line 2 (lower curve) -->
+      <span class="absolute bottom-[3px] right-[32%] hidden h-[70%] w-auto max-w-none text-[#B2EDA1] lg:block" aria-hidden="true">
+        <svg viewBox="0 0 275 605" fill="none" class="h-full w-auto" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.71289 599.989C1.71289 599.989 468.069 436.813 169.913 2.97119" stroke="currentColor" stroke-width="10" stroke-miterlimit="10" />
+        </svg>
+      </span>
+    </div>
+
+    <div class="relative z-10 mx-auto grid w-full max-w-[1213px] items-center gap-12 px-4 lg:items-start sm:px-6 lg:grid-cols-[1.42fr_1fr] lg:gap-10">
       <div v-reveal>
         <h1 class="text-[38px] font-extrabold leading-[1.2] tracking-[-0.02em] text-white sm:text-[46px] sm:leading-[1.3] lg:text-[52px] lg:leading-[1.62]">
           <span class="lg:whitespace-nowrap">Financial Security</span><br />

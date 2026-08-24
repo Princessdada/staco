@@ -34,13 +34,9 @@ body { background: #fff; overflow-x: clip; }
 /* scroll reveal — used by v-reveal. The original animates these regardless of
    system motion settings; the brief only requires reduced-motion handling on
    the tab bar, which keeps its own matchMedia logic. */
-.reveal {
-  opacity: 0;
-  transform: translateY(64px);
-  transition: opacity .9s cubic-bezier(.22,.61,.36,1), transform .9s cubic-bezier(.22,.61,.36,1);
-  will-change: opacity, transform;
-}
-.reveal.is-in { opacity: 1; transform: none; }
+/* The reveal is driven by the Web Animations API in app/utils/reveal.js, not
+   by a class toggle: a CSS transition could not be relied on to have painted
+   its start state before hydration finished, so it silently never ran. */
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
