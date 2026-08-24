@@ -127,7 +127,7 @@ const barStyle = computed(() => ({
     </svg>
 
     <!-- container for decorative ribbon matching exact original bezier curve -->
-    <div class="pointer-events-none absolute inset-0 z-0 mx-auto hidden h-full w-full max-w-[1213px] px-4 sm:px-6 lg:block">
+    <div class="pointer-events-none absolute inset-0 z-20 mx-auto hidden h-full w-full max-w-[1213px] px-4 sm:px-6 lg:block">
       <svg
         viewBox="0 0 1140 800"
         fill="none"
@@ -144,7 +144,7 @@ const barStyle = computed(() => ({
           so the "dives behind, comes out the bottom" read is automatic.
         -->
         <path
-          d="M857 -40C874 10 888 70 886 128C884 186 868 210 842 226C816 242 782 245 748 247C714 249 690 255 672 261C654 267 648 268 636 268C607 268 584 251 584 230C584 209 607 192 636 192C665 192 688 209 688 230C688 252 687 262 686 278C685 296 692 320 700 340C708 360 752 500 766 580C770 603 745 665 700 706C655 747 640 770 628 790"
+          d="M857 -40C874 10 888 70 886 128C884 186 868 214 842 234C812 254 780 262 748 266C714 270 692 276 674 283C656 289 648 292 636 292C607 292 584 275 584 254C584 233 607 216 636 216C665 216 688 233 688 254C688 272 686 288 682 306M772 585C776 618 762 652 738 682C714 712 676 750 648 778C640 787 636 792 632 798"
           stroke="currentColor"
           stroke-width="10.5"
           stroke-linecap="round"
